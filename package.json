@@ -1,0 +1,27 @@
+{
+  "name": "erb-apps-api",
+  "version": "0.0.1",
+  "description": "API for ERB Applications Website",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Th3BFG/erb-apps-api.git"
+  },
+  "keywords": [
+    "API"
+  ],
+  "author": "Ben (Th3BFG)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Th3BFG/erb-apps-api/issues"
+  },
+  "homepage": "https://github.com/Th3BFG/erb-apps-api#readme"
+}

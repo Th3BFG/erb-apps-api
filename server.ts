@@ -1,5 +1,8 @@
-const express =  require('express');
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+
 const app = express();
+app.use(bodyParser.json());
 
 app.route('/api/posts').get((req, res) => {
     // connect to DB
@@ -15,6 +18,27 @@ app.route('/api/posts').get((req, res) => {
         {id: '6', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 6', post_body: 'Test Body 6 with some content.'},
         ]
     });
+});
+
+app.route('/api/posts/:id').get((req, res) => {
+    const requestPostId = req.params['id'];
+    // TODO: Return actual post
+    res.send({ id: requestPostId });
+});
+
+app.route('/api/posts').post((req, res) => {
+    // TODO: Create post from request
+    res.send(201, req.body);
+});
+
+app.route('/api/posts/:id').put((req, res) => {
+    // TODO: modify post from request
+    res.send(200, req.body);
+});
+
+app.route('/api/posts/:id').delete((req, res) => {
+    // TODO: delete post from request
+    res.send(204);
 });
 
 app.listen(8000, () => {
