@@ -1,9 +1,19 @@
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
+
+// Setup CORS
+const corsOptions = {
+    origin: 'http://erbapps.com',
+    optionsSuccessStatus: 200 // IE11, various SmartTVs choke on 204 
+}
+  
+app.use(cors(corsOptions))
 app.use(bodyParser.json());
 
+// Setup Routes
 app.route('/api/posts').get((req, res) => {
     // connect to DB
     // pull list of blogPosts
