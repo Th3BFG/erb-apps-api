@@ -1,0 +1,18 @@
+{
+    "development": {
+        "config_id": "development",
+        "dbUser": "user",
+        "dbPassword": "password",
+        "dbHost": "localhost",
+        "dbPort": 9001,
+        "dbName": "db name"
+    },
+    "production": {
+        "config_id": "production",
+        "dbUser": "user",
+        "dbPassword": "password",
+        "dbHost": "localhost",
+        "dbPort": 9001,
+        "dbName": "db name"
+    }
+}

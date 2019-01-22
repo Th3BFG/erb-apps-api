@@ -1,16 +1,16 @@
-const BlogPost = require('../../models/blogPost');
+//const BlogPost = require('../../models/blogPost');
+const dal = require('../../dal/dal');
 
 exports.blogPostList = function(req, res) {
-    // connect to DB
-    // pull list of blogPosts
-    // return
-    res.send([{id: '1', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 1', post_body: 'Test Body 1 with some content.'},
-        {id: '2', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 2', post_body: 'Test Body 2 with some content.'},
-        {id: '3', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 3', post_body: 'Test Body 3 with some content.'},
-        {id: '4', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 4', post_body: 'Test Body 4 with some content.'},
-        {id: '5', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 5', post_body: 'Test Body 5 with some content.'},
-        {id: '6', date_posted: Date.now(), user: 'Ben', post_subject: 'Test Post 6', post_body: 'Test Body 6 with some content. Courtney does care'},
-    ]);
+    var db = dal.connect();
+    dal.select(db, "*", "BlogPost")
+    .then(function (data) {
+        console.log('DATA:', data);
+        res.status(200).send(data);
+    })
+    .catch(function (error) {
+        console.log('ERROR:', error);
+    });
 };
 
 exports.blogPostById = function(req, res) {
