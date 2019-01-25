@@ -2,7 +2,7 @@
 const dal = require('../../dal/dal');
 
 exports.blogPostList = function(req, res) {
-    var db = dal.connect();
+    const db = dal.connect();
     dal.select(db, "*", "BlogPost")
     .then(function (data) {
         console.log('DATA:', data);
@@ -10,7 +10,7 @@ exports.blogPostList = function(req, res) {
     })
     .catch(function (error) {
         console.log('ERROR:', error);
-    });
+    })
 };
 
 exports.blogPostById = function(req, res) {
@@ -20,8 +20,16 @@ exports.blogPostById = function(req, res) {
 };
 
 exports.createBlogPost = function(req, res) {
-    // TODO: Create post from request
-    res.send(201, req.body);
+    const db = dal.connect();
+    
+    const blogPost = {};
+    blogPost.DatePosted = "2019-01-01";
+    blogPost.Poster = "Ben";
+    blogPost.Subject = "This is a tested creation.";
+    blogPost.Body = "This is the body to a created test post."
+
+    dal.insert(db, "BlogPost", blogPost);
+    res.status(201).send(req.body);
 };
 
 exports.modifyBlogPost = function(req, res) {
