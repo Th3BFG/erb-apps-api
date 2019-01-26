@@ -1,13 +1,26 @@
 const pgp = require('pg-promise')(/*options*/);
 const config = require('../configHandler');
+const logger = require('../log/logger');
 
-exports.connect = function() {
+exports.start = function() {
+    logger.log({
+        level: 'info',
+        message: "Creating connection object."
+    });
     return pgp('postgres://' + global.gConfig.dbUser
         + ':' + global.gConfig.dbPassword 
         + '@' + global.gConfig.dbHost 
         + ':' + global.gConfig.dbPort 
         + '/' + global.gConfig.dbName );
 };
+
+exports.end = function () {
+    logger.log({
+        level: 'info',
+        message: "Releasing connection object."
+    });
+    pgp.end();
+}
 
 exports.select = function(db, columns, table) {
     // TODO: Prepared statements or query factory
@@ -33,7 +46,9 @@ exports.insert = function(db, table, item) {
             values +=  ',';
         }
     });
-    db.none('INSERT INTO ' + table + '(' + columns + ') VALUES (' + values + ')');
+    return db.one('INSERT INTO ' + table + '(' 
+                    + columns + ') VALUES (' + values 
+                    + ') RETURNING id');
 };
 
 exports.delete = function(db, table, id) {

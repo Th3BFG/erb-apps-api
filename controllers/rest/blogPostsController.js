@@ -1,16 +1,21 @@
-//const BlogPost = require('../../models/blogPost');
 const dal = require('../../dal/dal');
+const logger = require('../../log/logger');
 
 exports.blogPostList = function(req, res) {
-    const db = dal.connect();
+    const db = dal.start();
     dal.select(db, "*", "BlogPost")
     .then(function (data) {
-        console.log('DATA:', data);
         res.status(200).send(data);
     })
     .catch(function (error) {
-        console.log('ERROR:', error);
+        logger.log({
+            level: 'error',
+            message: error
+        });
     })
+    .finally(function () {
+        dal.end();
+    });
 };
 
 exports.blogPostById = function(req, res) {
@@ -20,16 +25,20 @@ exports.blogPostById = function(req, res) {
 };
 
 exports.createBlogPost = function(req, res) {
-    const db = dal.connect();
-    
-    const blogPost = {};
-    blogPost.DatePosted = "2019-01-01";
-    blogPost.Poster = "Ben";
-    blogPost.Subject = "This is a tested creation.";
-    blogPost.Body = "This is the body to a created test post."
-
-    dal.insert(db, "BlogPost", blogPost);
-    res.status(201).send(req.body);
+    const db = dal.start();
+    dal.insert(db, "BlogPost", req.body)
+    .then(function (id) {
+        res.status(201).send(id);
+    })
+    .catch(function (error) {
+        logger.log({
+            level: 'error',
+            message: error
+        });
+    })
+    .finally(function () {
+        dal.end();
+    });
 };
 
 exports.modifyBlogPost = function(req, res) {
