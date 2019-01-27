@@ -18,9 +18,17 @@ exports.blogPostList = function(req, res) {
 };
 
 exports.blogPostById = function(req, res) {
-    const requestPostId = req.params['id'];
-    // TODO: Return actual post
-    res.send({ id: requestPostId });
+    const db = dal.start();
+    dal.selectById(db, '*', TABLE_NAME, req.params['id'])
+    .then(function (data) {
+        res.status(200).send(data);
+    })
+    .catch(function (error) {
+        logger.error(error.message, error);
+    })
+    .finally(function () {
+        dal.end();
+    });
 };
 
 exports.createBlogPost = function(req, res) {
