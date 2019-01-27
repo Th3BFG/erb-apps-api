@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const logger = require('../log/logger');
+
 // Controllers
+logger.info("Loading Controllers");
 const blogPostController = require('../controllers/rest/blogPostsController');
 
 // Blog Post Routes
+logger.info("Assigning Blog Post routes.");
 router.get('/posts', blogPostController.blogPostList);
 router.get('/posts/:id', blogPostController.blogPostById);
 router.post('/posts', blogPostController.createBlogPost);

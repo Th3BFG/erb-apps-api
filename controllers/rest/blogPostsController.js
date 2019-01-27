@@ -8,10 +8,7 @@ exports.blogPostList = function(req, res) {
         res.status(200).send(data);
     })
     .catch(function (error) {
-        logger.log({
-            level: 'error',
-            message: error
-        });
+        logger.error(error);
     })
     .finally(function () {
         dal.end();
@@ -31,10 +28,7 @@ exports.createBlogPost = function(req, res) {
         res.status(201).send(id);
     })
     .catch(function (error) {
-        logger.log({
-            level: 'error',
-            message: error
-        });
+        logger.error(error);
     })
     .finally(function () {
         dal.end();
