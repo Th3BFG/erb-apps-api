@@ -1,6 +1,12 @@
-const pgp = require('pg-promise')(/*options*/);
 const config = require('../configHandler');
 const logger = require('../log/logger');
+const Promise = require('bluebird');
+
+// construct pg-promise options
+const initOptions = {
+    promiseLib: Promise
+};
+const pgp = require('pg-promise')(initOptions);
 
 exports.start = function() {
     logger.info("Creating connection object.");
@@ -17,39 +23,21 @@ exports.end = function () {
 }
 
 exports.select = function(db, columns, table) {
-    // TODO: Prepared statements or query factory
-    logger.info('SELECT on ' + table);
-    return db.any('SELECT ' + columns + ' FROM ' + table + ';')
+    logger.info('SELECT on ' + table + ' with ' + columns);
+    return db.any('SELECT $1~ FROM $2~;', [columns, table]);
 };
 
 exports.selectById = function(db, columns, table, id) {
-    logger.info('SELECT on ' + table + ' WHERE ' + id);
-    return db.one('SELECT ' + columns + ' FROM ' + table 
-                    + ' WHERE id = ' + id + ';');
+    logger.info('SELECT on ' + table + ' with ' + columns + ' WHERE ' + id);
+    return db.one('SELECT $1~ FROM $2~ WHERE id = $3;', [columns, table, id]);
 };
 
 exports.insert = function(db, table, item) {
-    // this one will be a bit more weird to generalize for now
-    // Find properties of item
-    const itemProps = Object.getOwnPropertyNames(item);
-    let columns = "";
-    let values = "";
-    itemProps.forEach(function(element, idx, array) {
-        columns += element;
-        values += '\'' + item[element] + '\'';
-        if(idx !== array.length -1) {
-            columns += ',' 
-            values +=  ',';
-        }
-    });
-    logger.info('INSERT ' + item);
-    return db.one('INSERT INTO ' + table + '(' 
-                    + columns + ') VALUES (' + values 
-                    + ') RETURNING id');
+    logger.info('INSERT INTO ' + table);
+    return db.one('INSERT INTO $1~($2~) VALUES ($2:csv) RETURNING id;', [table, item]);
 };
 
 exports.delete = function(db, table, id) {
     logger.info('DELETE ' + id + ' FROM ' + table);
-    return db.none('DELETE FROM ' + table 
-                    + ' WHERE id = ' + id + ';');
+    return db.none('DELETE FROM $1~ WHERE id = $2;', [table, id]);
 };
