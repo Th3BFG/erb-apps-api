@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const config = require('./configHandler');
 const blogRouter = require('./routers/blogRouter');
 const morgan = require('morgan');
 const logger = require('./log/logger');
@@ -8,7 +9,7 @@ const logger = require('./log/logger');
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: global.gConfig.apiUrl,
     optionsSuccessStatus: 200 // IE11, various SmartTVs choke on 204 
 }
 

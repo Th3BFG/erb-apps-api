@@ -5,7 +5,8 @@
         "dbPassword": "password",
         "dbHost": "localhost",
         "dbPort": 9001,
-        "dbName": "db name"
+        "dbName": "db name",
+        "apiUrl": "http://localhost"
     },
     "production": {
         "config_id": "production",
@@ -13,6 +14,7 @@
         "dbPassword": "password",
         "dbHost": "localhost",
         "dbPort": 9001,
-        "dbName": "db name"
+        "dbName": "db name",
+        "apiUrl": "http://localhost"
     }
 }
