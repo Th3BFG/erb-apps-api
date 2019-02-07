@@ -19,7 +19,7 @@ exports.userLogin = function(req, res) {
         if(user === null) { res.status(403).send('Invalid credentials'); }
         // Validate Credentials
         const hash = crypto.createHmac('sha256', user.salt);
-        if(user.password = hash.update(params.password).digest('hex')) {
+        if(user.password === hash.update(params.password).digest('hex')) {
             res.status(200).send('yeet');
         }
         
