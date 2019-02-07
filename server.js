@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const config = require('./configHandler');
 const blogRouter = require('./routers/blogRouter');
+const userRouter = require('./routers/userRouter');
 const morgan = require('morgan');
 const logger = require('./log/logger');
 
@@ -19,6 +20,7 @@ app.use(cors(corsOptions))
 app.use(bodyParser.json());
 // Routers
 app.use('/api', blogRouter)
+app.use('/api', userRouter);
 
 app.listen(8000, () => {
     logger.log({

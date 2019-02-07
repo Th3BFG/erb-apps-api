@@ -3,7 +3,7 @@ const router = express.Router();
 const logger = require('../log/logger');
 
 // Controllers
-logger.info("Loading Controllers");
+logger.info("Loading Blog Controllers");
 const blogPostController = require('../controllers/rest/blogPostsController');
 
 // Blog Post Routes
