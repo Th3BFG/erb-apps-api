@@ -1,3 +1,5 @@
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -22,9 +24,31 @@ app.use(bodyParser.json());
 app.use('/api', blogRouter)
 app.use('/api', userRouter);
 
-app.listen(8000, () => {
-    logger.log({
-        level: 'info',
-        message: 'Server has started.'
-    })
-});
+if(process.env.NODE_ENV === 'production')
+{
+    const privateKey = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/privkey.pem');
+    const certificate = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/cert.pem');
+    const ca = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/chain.pem', 'utf8');
+
+    const credentials = {
+        key: privateKey,
+        cert: certificate,
+        ca: ca
+    }
+
+    https.createServer(credentials, app).listen(8000, () => {
+        logger.log({
+            level: 'info',
+            message: 'Server has started.'
+        })
+    });
+}
+else
+{
+    app.listen(8000, () => {
+        logger.log({
+            level: 'info',
+            message: 'Development server has started.'
+        })
+    });
+}
