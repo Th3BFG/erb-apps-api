@@ -15,6 +15,9 @@
         "dbHost": "localhost",
         "dbPort": 9001,
         "dbName": "db name",
-        "apiUrl": "http://localhost"
+        "apiUrl": "http://localhost",
+        "privateKeyPath": "PATH_TO_PRIVATE_KEY",
+        "certificatePath": "PATH_TO_CERT",
+        "caPath": "PATH_TO_CERT_AUTHORITY"
     }
 }

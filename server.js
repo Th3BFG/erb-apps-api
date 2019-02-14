@@ -26,9 +26,9 @@ app.use('/api', userRouter);
 
 if(process.env.NODE_ENV === 'production')
 {
-    const privateKey = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/privkey.pem');
-    const certificate = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/cert.pem');
-    const ca = fs.readFileSync('/etc/letsencrypt/live/erbapps.com/chain.pem', 'utf8');
+    const privateKey = fs.readFileSync(global.gConfig.privateKeyPath);
+    const certificate = fs.readFileSync(global.gConfig.certificatePath);
+    const ca = fs.readFileSync(global.gConfig.caPath, 'utf8');
 
     const credentials = {
         key: privateKey,
