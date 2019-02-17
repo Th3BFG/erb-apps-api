@@ -1,9 +1,8 @@
 const _ = require('underscore');
-
+const crypto = require('crypto');
 const dal = require('../../dal/dal');
-
 const logger = require('../../log/logger');
-
+const keyService = require('../../helpers/keyService');
 const TABLE_NAME = 'user';
 
 exports.userLogin = function(req, res) {
@@ -21,14 +20,10 @@ exports.userLogin = function(req, res) {
         // Validate Credentials
         const hash = crypto.createHmac('sha256', user.salt);
         if(user.password === hash.update(params.password).digest('hex')) {
-            // construct jwt - with permission claims & secret/id
-            var userKey = uuid.v4();
-            var issuedAt = new Date().getTime();
-            var expiresAt = issuedAt + (EXPIRATION_TIME * 1000);
-            var token = jwt.generate(user, params.deviceId, 
-                                    userKey, issuedAt, expiresAt);
-            // return to sender
-            res.status(200).send(token);
+            keyService.createToken(user, params.deviceId).then(function(token) {
+                // return to sender
+                res.status(200).send(token);
+            });
         } else {
             res.status(403).send({error: 'Invalid credentials'});
         }
@@ -39,9 +34,16 @@ exports.userLogin = function(req, res) {
 };
 
 exports.getUserSecret = function(req, res) {
-
+    const params = _.pick(req.params, 'id');
+    if (!params.id) {
+        logger.error('Required parameters: id');
+        res.status(400).send({error: 'Required parameters: id'});
+    }
+    keyService.getToken(params.id).then(function(secret) {
+        res.status(200).send(secret);
+    });
 };
 
 exports.userLogout = function(req, res) {
-
+    res.sendStatus(200);
 };
