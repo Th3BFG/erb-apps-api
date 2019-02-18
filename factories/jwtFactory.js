@@ -27,7 +27,7 @@ JWTFactory.prototype.generate = function(user, deviceId, userKey, issuedAt, expi
         jti: jtiFactory.generateJTI(user.id, deviceId, issuedAt),
         iat: issuedAt,
         exp: expiresAt,
-        perm: user.perm 
+        perm: user.permissions 
     };
     const secret = this.getSecret(userKey);
     const token = jsrsasign.jws.JWS.sign(JWT_ENCODING_ALGORITHM,
