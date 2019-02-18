@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const dal = require('../../dal/dal');
 const logger = require('../../log/logger');
 const keyService = require('../../helpers/keyService');
+
 const TABLE_NAME = 'user';
 
 exports.userLogin = function(req, res) {
@@ -29,21 +30,6 @@ exports.userLogin = function(req, res) {
     })
     .catch(function (error) {
         logger.error(error.message, error);
-    });
-};
-
-exports.getUserSecret = function(req, res) {
-    const params = _.pick(req.params, 'id');
-    if (!params.id) {
-        logger.error('Required parameters: id');
-        res.status(400).send({error: 'Required parameters: id'});
-    }
-
-    keyService.getToken(params.id).then(function(secret) {
-        res.status(200).send(secret);
-    }).catch(function(error) {
-        logger.error(error.message, error);
-        next(error);
     });
 };
 
