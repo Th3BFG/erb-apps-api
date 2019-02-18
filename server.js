@@ -3,10 +3,10 @@ const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const morgan = require('morgan');
 const config = require('./configHandler');
 const blogRouter = require('./routers/blogRouter');
 const userRouter = require('./routers/userRouter');
-const morgan = require('morgan');
 const logger = require('./log/logger');
 
 const app = express();
@@ -18,7 +18,7 @@ const corsOptions = {
 
 // Setup Middleware
 app.use(morgan('combined', { stream: logger.stream }));
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // Routers
 app.use('/api', blogRouter)
@@ -37,18 +37,12 @@ if(process.env.NODE_ENV === 'production')
     }
 
     https.createServer(credentials, app).listen(8000, () => {
-        logger.log({
-            level: 'info',
-            message: 'Server has started.'
-        })
+        logger.info('Server has started.');
     });
 }
 else
 {
     app.listen(8000, () => {
-        logger.log({
-            level: 'info',
-            message: 'Development server has started.'
-        })
+        logger.info('Development server has started.');
     });
 }

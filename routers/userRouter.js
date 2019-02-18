@@ -10,6 +10,6 @@ const userController = require('../controllers/rest/userController');
 logger.info("Assigning User routes.");
 router.post('/users', userController.userLogin);
 router.get('/users/:id', userController.getUserSecret);
-router.delete('users/:id', userController.userLogout);
+router.delete('/users/:id', userController.userLogout);
 
 module.exports = router;

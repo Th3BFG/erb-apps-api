@@ -6,7 +6,6 @@ const keyService = require('../../helpers/keyService');
 const TABLE_NAME = 'user';
 
 exports.userLogin = function(req, res) {
-    // TODO: pull logic into appropriate services.
     const params = _.pick(req.body, 'username', 'password', 'deviceId');
     if (!params.username || !params.password || !params.deviceId) {
         logger.error('Required parameters: username, password and deviceId');
@@ -39,11 +38,29 @@ exports.getUserSecret = function(req, res) {
         logger.error('Required parameters: id');
         res.status(400).send({error: 'Required parameters: id'});
     }
+
     keyService.getToken(params.id).then(function(secret) {
         res.status(200).send(secret);
+    }).catch(function(error) {
+        logger.error(error.message, error);
+        next(error);
     });
 };
 
 exports.userLogout = function(req, res) {
-    res.sendStatus(200);
+    const params = _.pick(req.params, 'id');
+    if (!params.id) {
+        logger.error('Required parameters: id');
+        res.status(400).send({error: 'Required parameters: id'});
+    }
+
+    keyService.deleteToken(params.id).then(function(result) {
+        if (!result) {
+            return res.status(404).send();
+        }
+        res.status(204).send();
+    }).catch(function(error) {
+        logger.error(error.message, error);
+        next(error);
+    });
 };

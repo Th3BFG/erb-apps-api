@@ -1,4 +1,4 @@
-var appRoot = require('app-root-path');
+const appRoot = require('app-root-path');
 const winston = require('winston');
 
 const options = {
