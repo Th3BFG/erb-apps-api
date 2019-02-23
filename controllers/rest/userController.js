@@ -7,30 +7,31 @@ const keyService = require('../../helpers/keyService');
 const TABLE_NAME = 'user';
 
 exports.userLogin = function(req, res) {
-    const params = _.pick(req.body, 'username', 'password', 'deviceId');
-    if (!params.username || !params.password || !params.deviceId) {
-        logger.error('Required parameters: username, password and deviceId');
-        res.status(400).send({error: 'Required parameters: username, password and deviceId'});
+    const params = _.pick(req.body, 'un', 'pw', 'id');
+    if (!params.un || !params.pw || !params.id) {
+        logger.error('Required parameters: un, pw and id');
+        res.status(400).send({error: 'Required parameters: un, pw and id'});
     }
-
-    // Retrieve the user if possible
-    dal.selectBySearchTerm('*', TABLE_NAME, 'username', params.username)
-    .then(function (user) {
-        if(_.isNull(user)) { res.status(403).send({error: 'Invalid credentials'}); }
-        // Validate Credentials
-        const hash = crypto.createHmac('sha256', user.salt);
-        if(user.password === hash.update(params.password).digest('hex')) {
-            keyService.createToken(user, params.deviceId).then(function(token) {
-                // return to sender
-                res.status(200).send(token);
-            });
-        } else {
-            res.status(403).send({error: 'Invalid credentials'});
-        }
-    })
-    .catch(function (error) {
-        logger.error(error.message, error);
-    });
+    else {
+        // Retrieve the user if possible
+        dal.selectBySearchTerm('*', TABLE_NAME, 'username', params.un)
+        .then(function (user) {
+            if(_.isNull(user)) { res.status(403).send({error: 'Invalid credentials'}); }
+            // Validate Credentials
+            const hash = crypto.createHmac('sha256', user.salt);
+            if(user.password === hash.update(params.pw).digest('hex')) {
+                keyService.createToken(user, params.id).then(function(token) {
+                    // return to sender
+                    res.status(200).send('{ token: ' + token + ' }');
+                });
+            } else {
+                res.status(403).send({error: 'Invalid credentials'});
+            }
+        })
+        .catch(function (error) {
+            logger.error(error.message, error);
+        });
+    }
 };
 
 exports.userLogout = function(req, res) {
@@ -39,14 +40,15 @@ exports.userLogout = function(req, res) {
         logger.error('Required parameters: id');
         res.status(400).send({error: 'Required parameters: id'});
     }
-
-    keyService.deleteToken(params.id).then(function(result) {
-        if (!result) {
-            return res.status(404).send();
-        }
-        res.status(204).send();
-    }).catch(function(error) {
-        logger.error(error.message, error);
-        next(error);
-    });
+    else {
+        keyService.deleteToken(params.id).then(function(result) {
+            if (!result) {
+                return res.status(404).send();
+            }
+            res.status(204).send();
+        }).catch(function(error) {
+            logger.error(error.message, error);
+            next(error);
+        });
+    }
 };
